@@ -1,0 +1,34 @@
+/* WeatherForecast.css */
+.weather-forecast-container {
+    background-color: blue; /* Pozadina bela */
+    color: black; /* Tekst crn */
+    text-align: center; /* Centriraj tekst */
+    padding: 20px; /* Unutrašnja margina */
+    border-radius: 8px; /* Zaobljeni uglovi */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Senka */
+}
+
+.forecast-list {
+    list-style-type: none; /* Ukloni tačke ispred stavki */
+    padding: 0; /* Ukloni padding */
+}
+
+.forecast-form input {
+    margin: 5px; /* Razmak između polja */
+    padding: 10px; /* Unutrašnja margina za polja */
+    border: 1px solid #ccc; /* Okvir za polja */
+    border-radius: 4px; /* Zaobljeni uglovi */
+}
+
+.forecast-form button {
+    padding: 10px 15px; /* Unutrašnja margina za dugme */
+    border: none; /* Ukloni okvir */
+    border-radius: 4px; /* Zaobljeni uglovi */
+    background-color: #4CAF50; /* Zeleni dugme */
+    color: white; /* Bele slova na dugmetu */
+    cursor: pointer; /* Promeni pokazivač */
+}
+
+.forecast-form button:hover {
+    background-color: #45a049; /* Tamnija zelena pri hoveru */
+}
