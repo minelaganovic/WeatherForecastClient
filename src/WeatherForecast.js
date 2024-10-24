@@ -17,7 +17,8 @@ const WeatherForecast = () => {
         setForecasts(data);
     };
 
-    // Učitaj podatke kada se komponenta montira
+    // Učitaj podatke kada se komponenta kreira
+    
     useEffect(() => {
         fetchForecasts();
     }, []);
