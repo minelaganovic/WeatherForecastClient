@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './WeatherForecast.css'; // Poveži CSS fajl
+import { fetchForecasts, addForecast, deleteForecast, updateForecast } from './api'; // Uvoz funkcija iz API fajla
 
 const WeatherForecast = () => {
     const [forecasts, setForecasts] = useState([]);
@@ -10,49 +11,36 @@ const WeatherForecast = () => {
     });
     const [editingForecastId, setEditingForecastId] = useState(null); // ID prognoze koja se uređuje
 
-    // Funkcija za učitavanje vremenskih prognoza
-    const fetchForecasts = async () => {
-        const response = await fetch('https://localhost:7006/weatherforecast');
-        const data = await response.json();
-        setForecasts(data);
-    };
-
     // Učitaj podatke kada se komponenta kreira
-    
     useEffect(() => {
-        fetchForecasts();
+        const loadForecasts = async () => {
+            const data = await fetchForecasts();
+            setForecasts(data);
+        };
+        loadForecasts();
     }, []);
 
     // Funkcija za dodavanje nove prognoze
-    const addForecast = async (e) => {
+    const handleAddForecast = async (e) => {
         e.preventDefault(); // Sprečava osvežavanje stranice
-
-        const response = await fetch('https://localhost:7006/weatherforecast', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newForecast),
-        });
-
-        if (response.ok) {
-            fetchForecasts(); // Ponovo učitaj prognoze nakon dodavanja
+        try {
+            await addForecast(newForecast);
             setNewForecast({ date: '', temperatureC: '', summary: '' }); // Očisti formu
-        } else {
-            console.error("Error adding forecast");
+            const updatedForecasts = await fetchForecasts();
+            setForecasts(updatedForecasts); // Ponovo učitaj prognoze nakon dodavanja
+        } catch (error) {
+            console.error(error.message);
         }
     };
 
     // Funkcija za brisanje prognoze
-    const deleteForecast = async (id) => {
-        const response = await fetch(`https://localhost:7006/weatherforecast/${id}`, {
-            method: 'DELETE',
-        });
-
-        if (response.ok) {
-            fetchForecasts(); // Ponovo učitaj prognoze nakon brisanja
-        } else {
-            console.error("Error deleting forecast");
+    const handleDeleteForecast = async (id) => {
+        try {
+            await deleteForecast(id);
+            const updatedForecasts = await fetchForecasts();
+            setForecasts(updatedForecasts); // Ponovo učitaj prognoze nakon brisanja
+        } catch (error) {
+            console.error(error.message);
         }
     };
 
@@ -67,23 +55,16 @@ const WeatherForecast = () => {
     };
 
     // Funkcija za čuvanje izmenjene prognoze
-    const saveEdit = async (e) => {
+    const handleSaveEdit = async (e) => {
         e.preventDefault(); // Sprečava osvežavanje stranice
-
-        const response = await fetch(`https://localhost:7006/weatherforecast/${editingForecastId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newForecast),
-        });
-
-        if (response.ok) {
-            fetchForecasts(); // Ponovo učitaj prognoze nakon izmena
+        try {
+            await updateForecast(editingForecastId, newForecast);
             setNewForecast({ date: '', temperatureC: '', summary: '' }); // Očisti formu
             setEditingForecastId(null); // Resetuj ID nakon čuvanja
-        } else {
-            console.error("Error updating forecast");
+            const updatedForecasts = await fetchForecasts();
+            setForecasts(updatedForecasts); // Ponovo učitaj prognoze nakon izmena
+        } catch (error) {
+            console.error(error.message);
         }
     };
 
@@ -111,7 +92,7 @@ const WeatherForecast = () => {
                                 <button onClick={() => editForecast(forecast)} style={{ marginLeft: '10px' }}>
                                     Edit
                                 </button>
-                                <button onClick={() => deleteForecast(forecast.id)} style={{ marginLeft: '10px' }}>
+                                <button onClick={() => handleDeleteForecast(forecast.id)} style={{ marginLeft: '10px' }}>
                                     Delete
                                 </button>
                             </td>
@@ -121,7 +102,7 @@ const WeatherForecast = () => {
             </table>
 
             <h3>{editingForecastId ? 'Edit Forecast' : 'Add New Forecast'}</h3>
-            <form className="forecast-form" onSubmit={editingForecastId ? saveEdit : addForecast}>
+            <form className="forecast-form" onSubmit={editingForecastId ? handleSaveEdit : handleAddForecast}>
                 <input
                     type="date"
                     value={newForecast.date}
