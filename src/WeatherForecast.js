@@ -12,7 +12,7 @@ const WeatherForecast = () => {
 
     // Funkcija za učitavanje vremenskih prognoza
     const fetchForecasts = async () => {
-        const response = await fetch('https://localhost:7141/weatherforecast');
+        const response = await fetch('https://localhost:7006/weatherforecast');
         const data = await response.json();
         setForecasts(data);
     };
@@ -26,7 +26,7 @@ const WeatherForecast = () => {
     const addForecast = async (e) => {
         e.preventDefault(); // Sprečava osvežavanje stranice
 
-        const response = await fetch('https://localhost:7141/weatherforecast', {
+        const response = await fetch('https://localhost:7006/weatherforecast', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const WeatherForecast = () => {
 
     // Funkcija za brisanje prognoze
     const deleteForecast = async (id) => {
-        const response = await fetch(`https://localhost:7141/weatherforecast/${id}`, {
+        const response = await fetch(`https://localhost:7006/weatherforecast/${id}`, {
             method: 'DELETE',
         });
 
@@ -69,7 +69,7 @@ const WeatherForecast = () => {
     const saveEdit = async (e) => {
         e.preventDefault(); // Sprečava osvežavanje stranice
 
-        const response = await fetch(`https://localhost:7141/weatherforecast/${editingForecastId}`, {
+        const response = await fetch(`https://localhost:7006/weatherforecast/${editingForecastId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -89,19 +89,35 @@ const WeatherForecast = () => {
     return (
         <div className="weather-forecast-container">
             <h2>Weather Forecasts</h2>
-            <ul className="forecast-list">
-                {forecasts.map(forecast => (
-                    <li key={forecast.id}>
-                        {forecast.date}: {forecast.temperatureC}°C - {forecast.summary}
-                        <button onClick={() => editForecast(forecast)} style={{ marginLeft: '10px' }}>
-                            Edit
-                        </button>
-                        <button onClick={() => deleteForecast(forecast.id)} style={{ marginLeft: '10px' }}>
-                            Delete
-                        </button>
-                    </li>
-                ))}
-            </ul>
+
+            {/* Tabela za prikaz podataka */}
+            <table className="forecast-table">
+                <thead>
+                    <tr>
+                        <th>Datum prognoze</th>
+                        <th>Temperatura (°C)</th>
+                        <th>Opis</th>
+                        <th>Akcije</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {forecasts.map(forecast => (
+                        <tr key={forecast.id}>
+                            <td>{forecast.date}</td>
+                            <td>{forecast.temperatureC}°C</td>
+                            <td>{forecast.summary}</td>
+                            <td>
+                                <button onClick={() => editForecast(forecast)} style={{ marginLeft: '10px' }}>
+                                    Edit
+                                </button>
+                                <button onClick={() => deleteForecast(forecast.id)} style={{ marginLeft: '10px' }}>
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
 
             <h3>{editingForecastId ? 'Edit Forecast' : 'Add New Forecast'}</h3>
             <form className="forecast-form" onSubmit={editingForecastId ? saveEdit : addForecast}>

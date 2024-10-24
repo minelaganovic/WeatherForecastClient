@@ -7,7 +7,10 @@
     border-radius: 8px; /* Zaobljeni uglovi */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Senka */
 }
-
+#h2{
+    text-align: center;
+    margin: 20px auto;
+}
 .forecast-list {
     list-style-type: none; /* Ukloni tačke ispred stavki */
     padding: 0; /* Ukloni padding */
@@ -31,4 +34,21 @@
 
 .forecast-form button:hover {
     background-color: #45a049; /* Tamnija zelena pri hoveru */
+}
+.forecast-table {
+    border-collapse: collapse;
+    width: 60%;
+    margin: 20px auto;
+    text-align: center;
+
+}
+
+.forecast-table th, .forecast-table td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+}
+
+.forecast-table th {
+    background-color: #f2f2f2;
 }
